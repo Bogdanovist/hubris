@@ -1,0 +1,13 @@
+# Global Adaptation Parameters
+# Learned across all projects. Updated by the auto-retro system (user approves).
+
+defaults:
+  parallelism: 2
+  collaborative_threshold: 2
+
+# Per-repo-type adjustments (populated as patterns are observed)
+# repo_types:
+#   web_app:
+#     prefer_interactive_for_ui: true
+#   native:
+#     parallelism: 1

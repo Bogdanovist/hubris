@@ -1,0 +1,3 @@
+# Working repos (cloned during operation, never committed to hubris)
+workspace/*
+!workspace/.gitkeep

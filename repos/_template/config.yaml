@@ -1,0 +1,29 @@
+# Hubris Repo Configuration
+# Created by repo_init.sh, refined by the initialization agent.
+
+# ── Identity ──────────────────────────────────────────────
+name: ""
+remote: ""
+branch: main
+registered: ""
+
+# ── Language & Framework ──────────────────────────────────
+language: ""
+framework: ""
+package_manager: ""
+
+# ── Commands ──────────────────────────────────────────────
+# Commands agents run to validate changes. Relative to workspace dir.
+# Leave empty to skip a check.
+checks:
+  lint: ""
+  test: ""
+  typecheck: ""
+  build: ""
+
+# ── Directory Map ─────────────────────────────────────────
+# Key directories and their purpose (helps agents navigate)
+paths:
+  source: ""
+  tests: ""
+  docs: ""

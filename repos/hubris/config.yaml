@@ -1,0 +1,22 @@
+# Hubris self-registration (dogfooding)
+# Hubris manages itself using its own sprint process.
+
+name: "hubris"
+remote: ""
+branch: main
+registered: "2026-02-28"
+
+language: "bash"
+framework: ""
+package_manager: ""
+
+checks:
+  lint: "shellcheck scripts/*.sh scripts/lib/*.sh 2>/dev/null || echo 'shellcheck not installed — skipping'"
+  test: ""
+  typecheck: ""
+  build: ""
+
+paths:
+  source: "scripts/"
+  tests: "tests/"
+  docs: "docs/"
