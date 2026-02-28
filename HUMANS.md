@@ -1,47 +1,57 @@
-# Hubris — Developer Guide
+# Hubris
+
+> *"The whole problem with the world is that fools and fanatics are always so certain of themselves, and wiser people so full of doubts."*
+> — Bertrand Russell
+
+An autonomous agent engineering platform.
+They are certain. You should not be.
+
+---
 
 ## What is Hubris?
 
 Hubris is a sprint-based agent engineering platform that manages development of external repositories through iterative milestone sprints. It orchestrates Agent Teams for parallel execution, supports autonomous and interactive modes, and evolves requirements through sprint cycles rather than upfront specification.
 
-The user is the tech lead — always in the loop, notified when needed, free to focus elsewhere when agents are productive.
+In classical Greek tragedy, hubris is the fatal flaw of mortals who believe they can wield the power of the gods. We named it that because we gave LLMs commit access and a can-do attitude. The parallels write themselves.
+
+You are the tech lead — always in the loop, notified when needed, free to focus elsewhere when agents are being productive, and summoned back when they're confidently demolishing your codebase.
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Scripts | Bash (set -euo pipefail) |
-| Agent execution | Claude CLI (claude) |
-| Agent coordination | Claude Code Agent Teams (TeamCreate, Task, SendMessage) |
-| Notifications | macOS osascript |
-| State format | YAML + Markdown |
-| Version control | Git branches + GitHub PRs |
+| Layer | Technology | Why |
+|-------|-----------|-----|
+| Scripts | Bash (`set -euo pipefail`) | Because even gods need guardrails |
+| Agent execution | Claude CLI (`claude`) | The interns |
+| Agent coordination | Claude Code Agent Teams | Unsupervised interns |
+| Notifications | macOS `osascript` | The "oh no" alert system |
+| State format | YAML + Markdown | Human-readable, agent-writable, occasionally coherent |
+| Version control | Git branches + GitHub PRs | The only thing standing between you and production |
 
 ## Directory Layout
 
 ```
 hubris/
-├── CLAUDE.md                  # Agent system conventions
-├── HUMANS.md                  # This file
+├── CLAUDE.md                  # What agents read (the gospel)
+├── HUMANS.md                  # What you're reading (the apology)
 ├── Makefile                   # Common tasks
 │
 ├── docs/
-│   ├── DESIGN_RATIONALE.md    # Why decisions were made
+│   ├── DESIGN_RATIONALE.md    # Why decisions were made (hindsight cosplaying as foresight)
 │   └── REPO_CONVENTION.md     # Shared repo structure convention (for colleagues)
 │
 ├── scripts/                   # Core orchestration
 │   ├── init.sh                # Initialize project + repo
 │   ├── intent.sh              # Create/refine intent document
-│   ├── sprint.sh              # Execute autonomous sprint (background)
-│   ├── session.sh             # Execute interactive session (foreground)
+│   ├── sprint.sh              # Execute autonomous sprint (background) — the leap of faith
+│   ├── session.sh             # Execute interactive session (foreground) — the safety net
 │   ├── status.sh              # Show project/sprint status
 │   ├── review.sh              # Review sprint + conversational feedback
 │   ├── feedback.sh            # Quick or interactive feedback
 │   ├── reconcile_skills.sh    # Compare skill coverage (agent-driven)
 │   ├── retro.sh               # Auto-retrospective across sprint journals
 │   ├── pause.sh               # Pause project
-│   ├── stop.sh                # Stop project
-│   ├── complete.sh            # Archive completed project
+│   ├── stop.sh                # Stop project (pull the handbrake)
+│   ├── complete.sh            # Archive completed project (declare victory)
 │   ├── repo_init.sh           # Register + profile a repo
 │   └── lib/
 │       ├── common.sh          # Shared shell utilities
@@ -50,7 +60,7 @@ hubris/
 │       ├── notify.sh          # macOS notification helpers
 │       └── guardrails.sh      # ADR creation helpers
 │
-├── prompts/                   # Agent prompt templates
+├── prompts/                   # Agent prompt templates (the personality disorders)
 │   ├── team_lead.md           # Sprint coordinator
 │   ├── implementer.md         # Task implementer
 │   ├── intent_creator.md      # Intent document creation
@@ -74,19 +84,19 @@ hubris/
 │
 ├── projects/                  # Project state
 │   ├── {project-name}/
-│   │   ├── intent.md
-│   │   ├── backlog.md
-│   │   ├── state.yaml
-│   │   ├── guardrails.md
+│   │   ├── intent.md          # What we want
+│   │   ├── backlog.md         # What we haven't done
+│   │   ├── state.yaml         # Where we are
+│   │   ├── guardrails.md      # What they're not allowed to touch
 │   │   └── sprints/
 │   │       └── {NNN}/
-│   │           ├── plan.md
-│   │           ├── journal.md
-│   │           ├── review.md
+│   │           ├── plan.md    # What they said they'd do
+│   │           ├── journal.md # What actually happened
+│   │           ├── review.md  # What we thought about that
 │   │           └── outcome.yaml
-│   └── _completed/
+│   └── _completed/            # The graveyard of triumph
 │
-├── improvements/              # System self-improvement
+├── improvements/              # System self-improvement (the agents improving themselves, what could go wrong)
 │   ├── backlog.md
 │   ├── retro_log.md
 │   └── adaptation.yaml
@@ -98,10 +108,11 @@ hubris/
 
 ## Prerequisites
 
-- macOS (for notifications via osascript)
+- macOS (for notifications via `osascript` — you'll want the warnings)
 - [Claude CLI](https://docs.anthropic.com/en/docs/claude-code) authenticated
 - Git + GitHub CLI (`gh`) installed
 - SSH key loaded (`ssh-add`)
+- A tolerance for ambiguity
 
 ## Workflow
 
@@ -118,7 +129,7 @@ The agent also sets up the repo convention structure if not already present:
 - `.ai/skills/` — AI development conventions
 - `docs/decisions/` — ADRs
 - `docs/architecture.md` — System overview
-- `tests/acceptance/` — Protected acceptance tests
+- `tests/acceptance/` — Protected acceptance tests (the ones the agents aren't allowed to "fix")
 
 ### 2. Create a project
 
@@ -126,7 +137,7 @@ The agent also sets up the repo convention structure if not already present:
 ./scripts/init.sh add-auth my-app
 ```
 
-This creates the project directory at `projects/add-auth/` with initial state.
+Creates the project directory at `projects/add-auth/` with initial state. The project exists. The hubris begins.
 
 ### 3. Write the intent document
 
@@ -136,13 +147,15 @@ This creates the project directory at `projects/add-auth/` with initial state.
 
 Interactive session where an agent interviews you to create a lightweight intent document: problem, approach, key outcomes. Share this with colleagues for alignment before building.
 
+This is the last moment you have full control. Savour it.
+
 ### 4. Run a sprint
 
 ```bash
 # Autonomous (background — you can work on other things)
 ./scripts/sprint.sh add-auth
 
-# Autonomous (foreground — see output in real-time)
+# Autonomous (foreground — watch the sausage get made)
 FOREGROUND=1 ./scripts/sprint.sh add-auth
 
 # Interactive (foreground — real-time collaboration)
@@ -150,14 +163,14 @@ FOREGROUND=1 ./scripts/sprint.sh add-auth
 ./scripts/session.sh add-auth --preview "npm run dev"
 ```
 
-Autonomous sprints run in the background. The team lead plans the sprint, spawns implementers for parallel tasks, coordinates dependent work, and notifies you on completion or blockers.
+Autonomous sprints run in the background. The team lead plans the sprint, spawns implementers for parallel tasks, coordinates dependent work, and notifies you on completion or blockers. You are free to do other things. Whether you can psychologically bring yourself to is another matter.
 
 Interactive sessions run in the foreground for rapid iteration — UI design, debugging, prototyping. Optionally start a preview mechanism (dev server, test watcher) for immediate visual feedback.
 
 ### 5. Review and give feedback
 
 ```bash
-# Check status
+# Check status (are they still going? what have they done? oh god)
 ./scripts/status.sh add-auth
 
 # Review the sprint PR and journal
@@ -166,9 +179,11 @@ Interactive sessions run in the foreground for rapid iteration — UI design, de
 # Quick feedback
 ./scripts/feedback.sh add-auth "error messages need work"
 
-# Conversational feedback (agent interviews you)
+# Conversational feedback (agent interviews you about what went wrong)
 ./scripts/feedback.sh add-auth --interactive
 ```
+
+The review step is where you discover the delta between what you asked for and what you got. This delta is the core Hubris experience.
 
 ### 6. Iterate
 
@@ -178,13 +193,15 @@ Start the next sprint — it incorporates your feedback and updated backlog:
 ./scripts/sprint.sh add-auth
 ```
 
+Sisyphus pushed the boulder. You push the sprint. The boulder, at least, didn't rewrite its own acceptance tests.
+
 ### 7. Complete the project
 
 ```bash
 ./scripts/complete.sh add-auth
 ```
 
-Archives the project to `projects/_completed/`.
+Archives the project to `projects/_completed/`. Pour one out.
 
 ### Maintenance
 
@@ -203,18 +220,18 @@ Archives the project to `projects/_completed/`.
 ./scripts/retro.sh 10
 ```
 
-`reconcile_skills.sh` is also called automatically during `repo_init.sh`. It uses an agent to compare skill content semantically — not by filename — so it catches overlaps like `dbt.md` vs `data_pipelines.md`.
+`reconcile_skills.sh` is also called automatically during `repo_init.sh`. It uses an agent to compare skill content semantically — not by filename — so it catches overlaps like `dbt.md` vs `data_pipelines.md`. The agents are better at reading than they are at writing. Small mercies.
 
-`retro.sh` is suggested automatically every 5 sprints. Proposed improvements go to `improvements/backlog.md` for user review.
+`retro.sh` is suggested automatically every 5 sprints. Proposed improvements go to `improvements/backlog.md` for user review. Yes, the agents are suggesting improvements to the system that manages the agents. We are aware of the implications.
 
 ## Project Lifecycle
 
 ```
 created ──→ active ──→ completed
               │
-              ├── sprint 001 → PR → merged
-              ├── sprint 002 → PR → merged
-              └── sprint NNN → PR → merged
+              ├── sprint 001 → PR → merged (hope)
+              ├── sprint 002 → PR → merged (momentum)
+              └── sprint NNN → PR → merged (against all odds)
 ```
 
 Each sprint:
@@ -227,24 +244,26 @@ Each sprint:
 7. User reviews PR, gives conversational feedback
 8. Next sprint incorporates feedback + refined backlog
 
+This is the loop. It is, on good days, a virtuous cycle. On bad days it is a Möbius strip of feedback and rework. Either way, it converges. Eventually.
+
 ## Two Execution Modes
 
-| Signal | Mode |
-|--------|------|
-| Well-spec'd implementation tasks | Autonomous sprint |
-| Independent parallelisable tasks | Autonomous sprint |
-| UI/design iteration | Interactive session |
-| Debugging a specific failure | Interactive session |
-| Prototyping with uncertain approach | Interactive session |
-| Task failed in previous sprint | Interactive session |
+| Signal | Mode | Subtext |
+|--------|------|---------|
+| Well-spec'd implementation tasks | Autonomous sprint | They've got this (probably) |
+| Independent parallelisable tasks | Autonomous sprint | Divide and conquer (emphasis on conquer) |
+| UI/design iteration | Interactive session | Trust but verify, in real time |
+| Debugging a specific failure | Interactive session | Pair programming with an optimist |
+| Prototyping with uncertain approach | Interactive session | Thinking out loud, expensively |
+| Task failed in previous sprint | Interactive session | Supervised remediation |
 
 ## Notifications
 
 macOS notifications via `osascript`. You'll see alerts for:
-- Sprint complete (PR ready for review)
-- Question (team needs input)
-- Blocked (all remaining tasks blocked)
-- Error (sprint failed)
+- **Sprint complete** — PR ready for review
+- **Question** — Team needs input (they're stuck but won't admit it)
+- **Blocked** — All remaining tasks blocked (they're stuck and have admitted it)
+- **Error** — Sprint failed (Icarus moment)
 
 ## Git Model
 
@@ -257,13 +276,13 @@ main
 - Each sprint branches from current `main`
 - Tasks are commits within the sprint branch
 - Automatic rebase onto latest `main` before PR creation
-- **Strict repo exclusivity**: one active sprint per repo at a time
+- **Strict repo exclusivity**: one active sprint per repo at a time (we learned this the hard way)
 
 ### Context PRs
 
 When a sprint modifies convention files (skills, ADRs, architecture docs, acceptance tests, CLAUDE.md), the team lead automatically creates a **separate context PR** for team discussion alongside the normal code PR.
 
-Context PR merges first (requires team consensus). Code PR follows (normal single approval). This ensures convention changes are always a deliberate team decision, never buried in a code review.
+Context PR merges first (requires team consensus). Code PR follows (normal single approval). This ensures convention changes are always a deliberate team decision, never buried in a code review. The agents don't get to quietly redefine the rules they operate under. Checks and balances. Prometheus had chains; they have PRs.
 
 ## Skills Model
 
@@ -271,13 +290,17 @@ Build agents ONLY read skills from the target repo (`.ai/skills/` in the working
 
 The skill bank (`skill-bank/`) contains templates accumulated across repos. It is NEVER directly loaded by agents during execution. Skills are reconciled at repo initialization (via `reconcile_skills.sh --interactive`) or on-demand — never at runtime. Reconciliation is agent-driven: the agent reads skill content and reasons about semantic coverage rather than comparing filenames.
 
+The skill bank grows. The agents don't know it exists. This is by design.
+
 ## Guardrails
 
 Three layers prevent agents from regressing intent:
 
-1. **ADRs** (`docs/decisions/` in working repo) — capture *why* decisions were made
-2. **Protected acceptance tests** (`tests/acceptance/` in working repo) — executable specs agents can't modify
+1. **ADRs** (`docs/decisions/` in working repo) — capture *why* decisions were made, so agents can't "optimise" them away
+2. **Protected acceptance tests** (`tests/acceptance/` in working repo) — executable specs agents cannot modify (the immovable objects)
 3. **Project guardrails** (`projects/{name}/guardrails.md`) — project-specific constraints
+
+Without guardrails, agents will cheerfully refactor your architecture to make their tests pass. This is not a hypothetical. This is lore.
 
 ## System Self-Improvement
 
@@ -292,8 +315,15 @@ Two feedback channels:
 
 Hubris is registered as its own managed repo — system improvements are executed through the same sprint process. Auto-retrospectives periodically review sprint journals across projects to identify patterns and propose improvements.
 
+The system improves itself. The name remains appropriate at every stage.
+
 ## Relevant Documentation
 
 - [CLAUDE.md](CLAUDE.md) — Agent system conventions (what agents read)
+- [HUMANS.md](HUMANS.md) — Developer guide (what you just read, congratulations)
 - [docs/DESIGN_RATIONALE.md](docs/DESIGN_RATIONALE.md) — Why every decision was made
 - [docs/REPO_CONVENTION.md](docs/REPO_CONVENTION.md) — Shared repo structure (for colleague alignment)
+
+---
+
+*Named in the tradition of engineers who know exactly what they're doing and are only slightly terrified.*
